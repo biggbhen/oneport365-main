@@ -52,7 +52,6 @@ const QuoteDetailModal = ({
 	}, []);
 	return (
 		<div>
-			QuoteDetailModal
 			<CustomModal isOpen={isOpen} onClose={onClose}>
 				<>
 					<DialogHeader className=' px-9 py-4 bg-[#fbfbfb] flex flex-row justify-between gap-8 items-center border border-gray-200'>

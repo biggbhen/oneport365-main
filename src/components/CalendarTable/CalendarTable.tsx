@@ -57,11 +57,16 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	// console.log(weeks);
 
 	const items = new Array(5).fill(null).map((_, index) => (
-		<div key={index} className='flex gap-x-2'>
+		<div
+			key={index}
+			className='flex gap-x-2 hover:bg-[#D0F5FF] p-2 group cursor-pointer'
+			onClick={() => setOpenDetailModal(!openDetailModal)}>
 			<div className='border-[3px] border-[#374151] rounded-t-[25px] rounded-b-[25px]'></div>
 			<div className='p-2 flex-grow'>
 				<p className='flex gap-x-2 justify-between mb-2 text-xs'>
-					<span className='text-[#D0F5FF]'>$2,450.00</span>
+					<span className='text-[#D0F5FF] group-hover:text-[#005BC2]'>
+						$2,450.00
+					</span>
 					<span className='text-[#D0F5FF] bg-[#374151]'>4:00PM</span>
 				</p>
 				<p className='text-[#3B82F6] text-xs'>
@@ -131,7 +136,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 					))}
 					{(isOpen || isAnimating) && (
 						<div
-							className={`absolute top-0 bottom-0 right-0 w-[300px] bg-[#1f2937] p-4 shadow-md z-10 ${
+							className={`absolute top-0 bottom-0 right-0 w-[320px] bg-[#1f2937] p-4 shadow-md z-10 ${
 								isOpen ? 'animate-slideIn' : 'animate-slideOut'
 							}`}>
 							<div className='mb-4 flex flex-row-reverse'>
@@ -151,20 +156,20 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 									55º/40º <IoSunny color='#FDE047' size={20} />
 								</p>
 							</div>
-							<div className='flex flex-col gap-y-4'>
+							<div className='flex flex-col gap-y-2'>
 								{items}
 								<CreateDialog>
 									<FaPlus size={20} className='mr-2' />
 									Add new quote
 								</CreateDialog>
-								{/* detail modal */}
-								<QuoteDetailModal
-									isOpen={true}
-									onClose={() => {
-										setOpenDetailModal(false);
-									}}
-								/>
 							</div>
+							{/* detail modal */}
+							<QuoteDetailModal
+								isOpen={openDetailModal}
+								onClose={() => {
+									setOpenDetailModal(false);
+								}}
+							/>
 						</div>
 					)}
 				</div>

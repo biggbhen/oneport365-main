@@ -22,7 +22,7 @@ const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 		<div>
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button variant='outline' className='flex items-center'>
+					<Button variant='outline' className='flex items-center w-full'>
 						{children}
 					</Button>
 				</DialogTrigger>
