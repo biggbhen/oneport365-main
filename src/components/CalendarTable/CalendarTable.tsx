@@ -6,6 +6,7 @@ import { IoSunny } from 'react-icons/io5';
 import { ImCancelCircle } from 'react-icons/im';
 import { FaPlus } from 'react-icons/fa6';
 import CreateDialog from '@/app/modals/CreateQuote';
+import QuoteDetailModal from '../quote-detail/detailModal';
 
 type CalendarTableProps = {
 	daysArray: Array<{ date: dayjs.Dayjs | null; isPrevMonth: boolean }>;
@@ -15,6 +16,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	const [currentDate] = useState(dayjs());
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
+	const [openDetailModal, setOpenDetailModal] = useState(false);
 
 	const cancelRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -155,6 +157,13 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 									<FaPlus size={20} className='mr-2' />
 									Add new quote
 								</CreateDialog>
+								{/* detail modal */}
+								<QuoteDetailModal
+									isOpen={true}
+									onClose={() => {
+										setOpenDetailModal(false);
+									}}
+								/>
 							</div>
 						</div>
 					)}
