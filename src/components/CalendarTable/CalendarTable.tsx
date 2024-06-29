@@ -3,12 +3,12 @@ import React, { MutableRefObject, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
 import { IoSunny } from 'react-icons/io5';
-import { Button } from '@/components/ui/button';
+import { ImCancelCircle } from 'react-icons/im';
 import { FaPlus } from 'react-icons/fa6';
 import CreateDialog from '@/app/modals/CreateQuote';
 
 type CalendarTableProps = {
-	daysArray: any[];
+	daysArray: Array<{ date: dayjs.Dayjs | null; isPrevMonth: boolean }>;
 };
 
 const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
@@ -16,29 +16,30 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-	const modalRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
+	const cancelRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
 	const weeks = [];
 	for (let i = 0; i < daysArray.length; i += 7) {
 		weeks.push(daysArray.slice(i, i + 7));
 	}
 
-	const handleClickOutside = (event: MouseEvent) => {
-		if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+	const handleCancel = (event: MouseEvent) => {
+		if (cancelRef.current && cancelRef.current.contains(event.target as Node)) {
 			setIsOpen(false);
 		}
 	};
 
 	React.useEffect(() => {
 		if (isOpen) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener('click', handleCancel);
 		} else {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('click', handleCancel);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('click', handleCancel);
 		};
+		// eslint-disable-next-line
 	}, [isOpen]);
 
 	React.useEffect(() => {
@@ -50,6 +51,8 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	}, [isOpen]);
 
 	const handleOpen = () => setIsOpen(true);
+
+	// console.log(weeks);
 
 	const items = new Array(5).fill(null).map((_, index) => (
 		<div key={index} className='flex gap-x-2'>
@@ -66,7 +69,6 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 		</div>
 	));
 
-	// console.log(currentDate);
 	return (
 		<div className='relative overflow-x-auto'>
 			<div className='w-full text-sm text-gray-500'>
@@ -84,39 +86,61 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 				<div className='relative overflow-hidden'>
 					{weeks.map((week, weekIndex) => (
 						<div className='grid grid-cols-7' key={weekIndex}>
-							{week.map((day, dayIndex) => (
-								<div
-									className={`px-6 py-4 min-h-[100px] group cursor-pointer whitespace-nowrap ${
-										day && 'hover:bg-[#1F2937]'
-									} ${day ? 'border border-b border-t' : ''}`}
-									key={dayIndex}
-									onClick={() => day && handleOpen()}>
-									<p
-										className={`mb-6 ${day && 'group-hover:text-white'} ${
-											currentDate?.date() === day?.date() &&
-											'bg-[#005BC2] w-max text-white p-1 rounded-sm '
-										}`}>
-										{day ? day.date() : ''}
-									</p>
-									<p
-										className={`text-xs mb-1 ${
-											day && 'group-hover:text-white'
-										}`}>
-										{day ? '5 Quotes' : ''}
-									</p>
-									<p className='text-xs w-max px-1 rounded-[25px] bg-[#98FF9B40] group-hover:bg-white'>
-										{day ? 'Total: $23,045.00' : ''}
-									</p>
-								</div>
-							))}
+							{week.map(
+								(
+									day: { date: dayjs.Dayjs | null; isPrevMonth: boolean },
+									dayIndex
+								) =>
+									day.date && (
+										<div
+											className={`px-6 py-4 min-h-[100px] group cursor-pointer whitespace-nowrap ${
+												day && 'hover:bg-[#1F2937]'
+											} ${day ? 'border' : ''}`}
+											key={dayIndex}
+											onClick={() => day && handleOpen()}>
+											<p
+												className={`mb-6 ${
+													day.date && 'group-hover:text-white'
+												} ${
+													day?.date.format('DDMMYY').toUpperCase() ===
+														currentDate.format('DDMMYY').toUpperCase() &&
+													'bg-[#005BC2] w-max text-white py-1 px-[6px] rounded-sm '
+												}`}>
+												{day.date ? day.date.date() : ''}
+											</p>
+											<p
+												className={`text-xs mb-1 ${
+													day && 'group-hover:text-white'
+												}`}>
+												{day ? '5 Quotes' : ''}
+											</p>
+											<p
+												className={`text-xs w-max px-1 rounded-[25px] ${
+													!day.isPrevMonth
+														? 'bg-[#98FF9B40] group-hover:bg-white'
+														: 'bg-[#E5E7EB] group-hover:bg-white'
+												}`}>
+												{day.date ? 'Total: $23,045.00' : ''}
+											</p>
+										</div>
+									)
+							)}
 						</div>
 					))}
 					{(isOpen || isAnimating) && (
 						<div
-							ref={modalRef}
-							className={`absolute top-0 bottom-0 right-0 w-[300px] bg-[#1f2937] p-4 shadow-md ${
+							className={`absolute top-0 bottom-0 right-0 w-[300px] bg-[#1f2937] p-4 shadow-md z-10 ${
 								isOpen ? 'animate-slideIn' : 'animate-slideOut'
 							}`}>
+							<div className='mb-4 flex flex-row-reverse'>
+								<div ref={cancelRef}>
+									<ImCancelCircle
+										size={20}
+										color='white'
+										className='cursor-pointer'
+									/>
+								</div>
+							</div>
 							<div className='flex justify-between gap-x-4 mb-4'>
 								<p className='text-[#3B82F6]'>
 									<span className='font-bold'>TODAY</span> 2/5/2024

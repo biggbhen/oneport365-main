@@ -15,17 +15,31 @@ const Calendar: React.FC<CalendarProps> = () => {
 	const endOfMonth = currentDate.endOf('month');
 	const daysInMonth = endOfMonth.date();
 	const firstDayOfMonth = startOfMonth.day();
+	const prevMonthEnd = startOfMonth.subtract(1, 'day');
 
-	const daysArray: Array<dayjs.Dayjs | null> = new Array(firstDayOfMonth).fill(
-		null
-	);
+	// Calculate how many days from the previous month need to be added
+	const daysFromPrevMonth = firstDayOfMonth === 0 ? 0 : firstDayOfMonth;
 
-	for (let i = 0; i < daysInMonth; i++) {
-		daysArray.push(startOfMonth.add(i, 'day'));
+	// Initialize the days array
+	const daysArray: Array<{ date: dayjs.Dayjs | null; isPrevMonth: boolean }> =
+		[];
+
+	// Add days from the previous month
+	for (let i = daysFromPrevMonth; i > 0; i--) {
+		daysArray.push({
+			date: prevMonthEnd.subtract(i - 1, 'day'),
+			isPrevMonth: true,
+		});
 	}
 
+	// Add days from the current month
+	for (let i = 0; i < daysInMonth; i++) {
+		daysArray.push({ date: startOfMonth.add(i, 'day'), isPrevMonth: false });
+	}
+
+	// Fill the rest of the array to complete the weeks
 	while (daysArray.length % 7 !== 0) {
-		daysArray.push(null);
+		daysArray.push({ date: null, isPrevMonth: false });
 	}
 
 	const handleNextMonth = () => {
@@ -36,6 +50,10 @@ const Calendar: React.FC<CalendarProps> = () => {
 		setCurrentDate(currentDate.subtract(1, 'month'));
 	};
 
+	const currentMonth = currentDate.format('MMMM').toUpperCase();
+	const currentYear = currentDate.format('YYYY');
+
+	// console.log(currentDate);
 	return (
 		<div className='px-8 mb-8'>
 			<div className='flex justify-between p-4 mb-6'>
@@ -46,7 +64,10 @@ const Calendar: React.FC<CalendarProps> = () => {
 				<div className='flex gap-x-4 items-center'>
 					<div>
 						<p className='text-xl'>
-							May <span className='text-[#00861E]'>2024</span>
+							{currentMonth && currentMonth}{' '}
+							<span className='text-[#00861E]'>
+								{currentYear && currentYear}
+							</span>
 						</p>
 					</div>
 					<div className='flex items-center gap-x-2'>
