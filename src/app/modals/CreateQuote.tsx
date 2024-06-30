@@ -1,3 +1,4 @@
+'use client';
 import { DatePickerComponent } from '@/components/datePicker/DatePickerComponent';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,31 +13,38 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { setInitialQuote } from '@/lib/features/features';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import React, { ReactNode, useEffect, useRef } from 'react';
 import 'dayjs/locale/en';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 
 interface ModalProps {
 	children: ReactNode;
 }
 
 const CreateDialog: React.FC<ModalProps> = ({ children }) => {
+	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [title, setTitle] = React.useState('');
 	const dispatch = useAppDispatch();
 	const [currentDate] = React.useState(dayjs());
 
+	const { currentQuote } = useAppSelector((state) => state.quotes);
+
 	const handleSave = () => {
 		const newQuote = {
 			quote_title: title,
-			quote_date: currentDate.date(),
+			quote_date: currentDate.toISOString(),
 			sections: [],
 		};
-		// dispatch(setInitialQuote(newQuote));
+		if (newQuote.quote_title !== '') router.push('/quote');
+		dispatch(setInitialQuote(newQuote));
 	};
 
-	console.log(currentDate.date());
+	if (typeof window === 'undefined') {
+		return null; // Return null or handle SSR case appropriately
+	}
 	return (
 		<div>
 			<Dialog open={open} onOpenChange={() => setOpen(!open)}>
@@ -62,7 +70,8 @@ const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 							</Label>
 							<Input
 								id='title'
-								defaultValue='Exportation charges'
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
 								className='col-span-3 placeholder:text-[#1F293780] border-[#E5E7EB]'
 							/>
 						</div>
@@ -79,7 +88,10 @@ const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 					</div>
 					<div className='px-6 py-4'>
 						<div>
-							<Button type='submit' className='w-full text-white bg-[#007003]'>
+							<Button
+								type='submit'
+								className='w-full text-white bg-[#007003]'
+								onClick={() => handleSave()}>
 								Create New Quote
 							</Button>
 						</div>

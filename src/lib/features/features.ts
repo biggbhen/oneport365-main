@@ -90,13 +90,15 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 				currentQuote: action.payload,
 			};
 		case ADD_SECTION_TO_QUOTE:
-			return {
-				...state,
-				currentQuote: {
-					...state.currentQuote!,
-					sections: [...state.currentQuote!.sections, action.payload],
-				},
-			};
+			if (state.currentQuote) {
+				return {
+					...state,
+					currentQuote: {
+						...state.currentQuote,
+						sections: [...(state.currentQuote.sections || []), action.payload],
+					},
+				};
+			}
 		default:
 			return state;
 	}

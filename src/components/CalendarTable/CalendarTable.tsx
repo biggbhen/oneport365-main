@@ -90,7 +90,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 		// eslint-disable-next-line
 	}, [quotes]);
 
-	console.log(dateQuoteList);
+	// console.log(dateQuoteList);
 
 	const items = (dateQuoteList: Quote[]) => {
 		return dateQuoteList.slice(0, 5).map((quote, index) => (
@@ -103,13 +103,13 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 					<p className='flex gap-x-2 justify-between mb-2 text-xs'>
 						<span className='text-[#D0F5FF] group-hover:text-[#005BC2]'>
 							{quote.sections
-								.reduce(
+								?.reduce(
 									(sum, section) =>
 										sum +
-										section.section_data.reduce(
+										(section.section_data?.reduce(
 											(dataSum, data) => dataSum + data.amount,
 											0
-										),
+										) ?? 0),
 									0
 								)
 								.toLocaleString('en-US', {
@@ -158,14 +158,14 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 									const totalAmount = dayQuotes.reduce((sum, quote) => {
 										return (
 											sum +
-											quote.sections.reduce((sectionSum, section) => {
+											(quote.sections?.reduce((sectionSum, section) => {
 												return (
 													sectionSum +
-													section.section_data.reduce((dataSum, data) => {
+													(section.section_data?.reduce((dataSum, data) => {
 														return dataSum + data.amount;
-													}, 0)
+													}, 0) ?? 0)
 												);
-											}, 0)
+											}, 0) ?? 0)
 										);
 									}, 0);
 									return (
@@ -194,7 +194,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												className={`text-xs mb-1 ${
 													day && 'group-hover:text-white'
 												}`}>
-												{`${dayQuotes.length | 0} Quotes`}
+												{`${dayQuotes.length} Quotes`}
 											</p>
 											<p
 												className={`text-xs w-max px-1 rounded-[25px] ${
@@ -202,7 +202,12 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 														? 'bg-[#98FF9B40] group-hover:bg-white'
 														: 'bg-[#E5E7EB] group-hover:bg-white'
 												}`}>
-												{day.date ? 'Total: $23,045.00' : ''}
+												{day.date
+													? `Total: ${totalAmount.toLocaleString('en-US', {
+															style: 'currency',
+															currency: 'USD',
+													  })}`
+													: ''}
 											</p>
 										</div>
 									);
@@ -210,6 +215,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 							)}
 						</div>
 					))}
+
 					{(isOpen || isAnimating) && (
 						<div
 							className={`absolute top-0 bottom-0 right-0 w-[320px] bg-[#1f2937] p-4 shadow-md z-10 ${
