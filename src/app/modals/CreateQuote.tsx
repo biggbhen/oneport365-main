@@ -11,7 +11,11 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { setInitialQuote } from '@/lib/features/features';
+import { useAppDispatch } from '@/lib/hooks';
 import React, { ReactNode, useEffect, useRef } from 'react';
+import 'dayjs/locale/en';
+import dayjs from 'dayjs';
 
 interface ModalProps {
 	children: ReactNode;
@@ -19,6 +23,20 @@ interface ModalProps {
 
 const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 	const [open, setOpen] = React.useState(false);
+	const [title, setTitle] = React.useState('');
+	const dispatch = useAppDispatch();
+	const [currentDate] = React.useState(dayjs());
+
+	const handleSave = () => {
+		const newQuote = {
+			quote_title: title,
+			quote_date: currentDate.date(),
+			sections: [],
+		};
+		// dispatch(setInitialQuote(newQuote));
+	};
+
+	console.log(currentDate.date());
 	return (
 		<div>
 			<Dialog open={open} onOpenChange={() => setOpen(!open)}>

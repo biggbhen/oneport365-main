@@ -2,12 +2,14 @@ interface QuotesState {
 	quotes: any[];
 	loading: boolean;
 	error: string | null;
+	currentQuote: Quote | null;
 }
 
 const initialState: QuotesState = {
 	quotes: [],
 	loading: false,
 	error: null,
+	currentQuote: null,
 };
 
 // actionTypes.ts
@@ -17,6 +19,8 @@ export const FETCH_QUOTES_FAILED = 'FETCH_QUOTES_FAILED';
 export const CREATE_QUOTE_REQUESTED = 'CREATE_QUOTE_REQUESTED';
 export const CREATE_QUOTE_SUCCESS = 'CREATE_QUOTE_SUCCESS';
 export const CREATE_QUOTE_FAILURE = 'CREATE_QUOTE_FAILURE';
+export const SET_INITIAL_QUOTE = 'SET_INITIAL_QUOTE';
+export const ADD_SECTION_TO_QUOTE = 'ADD_SECTION_TO_QUOTE';
 
 export const fetchQuotesRequested = (startDate: string, endDate: string) => ({
 	type: FETCH_QUOTES_REQUESTED,
@@ -44,6 +48,15 @@ export const createQuoteFailure = (error: string) => ({
 	type: CREATE_QUOTE_FAILURE,
 	payload: error,
 });
+export const setInitialQuote = (quote: Quote) => ({
+	type: SET_INITIAL_QUOTE,
+	payload: quote,
+});
+
+export const addSectionToQuote = (section: Section) => ({
+	type: ADD_SECTION_TO_QUOTE,
+	payload: section,
+});
 
 const quotesReducer = (state = initialState, action: any): QuotesState => {
 	switch (action.type) {
@@ -70,6 +83,19 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 				...state,
 				loading: false,
 				error: action.payload,
+			};
+		case SET_INITIAL_QUOTE:
+			return {
+				...state,
+				currentQuote: action.payload,
+			};
+		case ADD_SECTION_TO_QUOTE:
+			return {
+				...state,
+				currentQuote: {
+					...state.currentQuote!,
+					sections: [...state.currentQuote!.sections, action.payload],
+				},
 			};
 		default:
 			return state;

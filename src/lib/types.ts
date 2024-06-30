@@ -24,5 +24,5 @@ interface Quote {
 	_id?: string;
 	quote_title: string;
 	quote_date: string;
-	sections: Section[];
+	sections?: Section[];
 }
