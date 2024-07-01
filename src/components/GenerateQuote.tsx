@@ -142,8 +142,12 @@ const GenerateQuote: React.FC<Props> = ({}) => {
 	};
 
 	const handleCreate = () => {
-		// console.log(sectionList);
-		dispatch(addSectionToQuote(sectionList));
+		const new_Quote: QuoteUpdate = {
+			...quoteLs,
+			sections: sectionList,
+		};
+		dispatch(addSectionToQuote(new_Quote));
+		// console.log(new_Quote);
 	};
 
 	return (

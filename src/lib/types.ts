@@ -26,3 +26,17 @@ interface Quote {
 	quote_date: string | null;
 	sections?: Section[];
 }
+
+interface SectionUpdate {
+	section_name: string;
+	section_number: number;
+	section_currency: SectionCurrency;
+	section_data: SectionData[];
+	editable: boolean;
+}
+
+interface QuoteUpdate {
+	quote_title: string;
+	quote_date: string;
+	sections: SectionUpdate[];
+}

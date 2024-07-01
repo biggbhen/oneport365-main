@@ -56,7 +56,7 @@ export const setInitialQuote = (quote: Quote) => ({
 	payload: quote,
 });
 
-export const addSectionToQuote = (section: Section) => ({
+export const addSectionToQuote = (section: QuoteUpdate) => ({
 	type: ADD_SECTION_TO_QUOTE,
 	payload: section,
 });
@@ -72,14 +72,6 @@ export const saveQuoteToLocalStorage = (quote: {
 	if (typeof window !== 'undefined') {
 		localStorage.setItem('quote', JSON.stringify(quote));
 	}
-};
-
-const getQuoteFromLocalStorage = () => {
-	if (typeof window !== 'undefined') {
-		const quote = localStorage.getItem('quote');
-		return quote ? JSON.parse(quote) : null;
-	}
-	return null;
 };
 
 const quotesReducer = (state = initialState, action: any): QuotesState => {
@@ -117,10 +109,7 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 			if (state.currentQuote) {
 				return {
 					...state,
-					currentQuote: {
-						...state.currentQuote,
-						sections: [...(state.currentQuote.sections || []), action.payload],
-					},
+					currentQuote: action.payload,
 				};
 			}
 		case ADD_TEST_SECTION:
