@@ -30,9 +30,9 @@ const Index = () => {
 
 	return (
 		<StoreProvider>
-			<header className='min-h-4 shadow bg-[#FAFAFA] py-8 sticky z-20 top-0 left-0 w-full'>
-				<div className='flex items-center justify-between max-w-[83rem] mx-auto'>
-					<div className=''>
+			<header className='min-h-4 shadow bg-[#FAFAFA] py-8 sticky z-20 top-0 left-0 px-8'>
+				<div className='flex items-center justify-between'>
+					<div>
 						<button className='text-xs text-[#6B7280]'>Back to quotes</button>
 						<h2 className='text-[#1F2937] text-2xl'>
 							{quoteLs?.quote_title ? quoteLs?.quote_title : 'Quote Title Here'}

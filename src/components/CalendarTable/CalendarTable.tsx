@@ -5,7 +5,7 @@ import 'dayjs/locale/en';
 import { IoSunny } from 'react-icons/io5';
 import { ImCancelCircle } from 'react-icons/im';
 import { FaPlus } from 'react-icons/fa6';
-import CreateDialog from '@/app/modals/CreateQuote';
+import CreateDialog from '@/components/modals/CreateQuote';
 import QuoteDetailModal from '../quote-detail/detailModal';
 import { useAppSelector } from '@/lib/hooks';
 import { Quote } from '@/lib/types';
