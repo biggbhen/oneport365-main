@@ -1,10 +1,33 @@
+'use client';
 import GenerateQuote from '@/components/GenerateQuote';
 import React from 'react';
 import StoreProvider from '../StoreProvider';
+import { useLocalStorage } from '@/lib/features/actions';
+import dayjs from 'dayjs';
 
 type Props = {};
 
-const Index = (props: Props) => {
+// Utility function to get the quote from localStorage
+const getQuoteFromLocalStorage = () => {
+	if (typeof window !== 'undefined') {
+		const quote = localStorage.getItem('quote');
+		return quote ? JSON.parse(quote) : null;
+	}
+	return null;
+};
+
+const Index = () => {
+	const [quoteLs, setQuoteLs] = React.useState<{
+		quote_title: string;
+		quote_date: string;
+		sections: any[];
+	} | null>(null);
+
+	React.useEffect(() => {
+		const quoteFromStorage = getQuoteFromLocalStorage();
+		setQuoteLs(quoteFromStorage);
+	}, []);
+
 	return (
 		<StoreProvider>
 			<header className='min-h-4 shadow bg-[#FAFAFA] py-8 sticky z-20 top-0 left-0 w-full'>
@@ -12,8 +35,13 @@ const Index = (props: Props) => {
 					<div className=''>
 						<button className='text-xs text-[#6B7280]'>Back to quotes</button>
 						<h2 className='text-[#1F2937] text-2xl'>
-							“Quote Title Here”{' '}
-							<span className='text-[#6B7280]'>[2/5/2024]</span>
+							{quoteLs?.quote_title ? quoteLs?.quote_title : 'Quote Title Here'}
+							<span className='text-[#6B7280]'>
+								{' '}
+								{quoteLs?.quote_date
+									? dayjs(quoteLs?.quote_date).format('MM/DD/YYYY')
+									: [2 / 5 / 2024]}
+							</span>
 						</h2>
 					</div>
 					<div className='flex items-center space-x-4'>

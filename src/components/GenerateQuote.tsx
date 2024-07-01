@@ -19,15 +19,20 @@ import {
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { Button } from './ui/button';
 import { addSectionToQuote, addTestSection } from '@/lib/features/features';
+import { useLocalStorage } from '@/lib/features/actions';
 
 type Props = {};
 
-const GenerateQuote = () => {
-	const { currentQuote, addtestState } = useAppSelector(
-		(state) => state.quotes
-	);
-	// console.log('Current quote in GenerateQuote:', currentQuote);
+// Utility function to get the quote from localStorage
+const getQuoteFromLocalStorage = () => {
+	if (typeof window !== 'undefined') {
+		const quote = localStorage.getItem('quote');
+		return quote ? JSON.parse(quote) : null;
+	}
+	return null;
+};
 
+const GenerateQuote: React.FC<Props> = ({}) => {
 	const dispatch = useAppDispatch();
 	const [sectionList, setSectionList] = useState<any>([
 		{
@@ -44,12 +49,23 @@ const GenerateQuote = () => {
 		},
 	]);
 
-	const [quoteInput, setQuoteInput] = useState<any>({
+	const [quoteLs, setQuoteLs] = useState<{
+		quote_title: string;
+		quote_date: string;
+		sections: any[];
+	} | null>(null);
+
+	React.useEffect(() => {
+		const quoteFromStorage = getQuoteFromLocalStorage();
+		setQuoteLs(quoteFromStorage);
+	}, []);
+
+	const [quoteInput, setQuoteInput] = useState<SectionData>({
 		basis: '',
 		unit_of_measurement: 'kilogram',
-		unit: '',
-		rate: '',
-		amount: '',
+		unit: 0,
+		rate: 0,
+		amount: 0,
 	});
 
 	const handleSectionLabel = (e: any, idx: any) => {
@@ -95,12 +111,11 @@ const GenerateQuote = () => {
 				})
 			);
 			setQuoteInput({
-				_id: 1,
 				basis: '',
 				unit_of_measurement: '',
-				unit: '',
-				rate: '',
-				amount: '',
+				unit: 0,
+				rate: 0,
+				amount: 0,
 			});
 		}
 	};
@@ -127,8 +142,8 @@ const GenerateQuote = () => {
 	};
 
 	const handleCreate = () => {
+		// console.log(sectionList);
 		dispatch(addSectionToQuote(sectionList));
-		// dispatch(addTestSection());
 	};
 
 	return (
