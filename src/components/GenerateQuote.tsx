@@ -142,12 +142,11 @@ const GenerateQuote: React.FC<Props> = ({}) => {
 	};
 
 	const handleCreate = () => {
-		const new_Quote: QuoteUpdate = {
+		const new_Quote: any = {
 			...quoteLs,
 			sections: sectionList,
 		};
 		dispatch(addSectionToQuote(new_Quote));
-		// console.log(new_Quote);
 	};
 
 	return (

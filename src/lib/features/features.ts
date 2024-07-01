@@ -106,12 +106,10 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 				currentQuote: action.payload,
 			};
 		case ADD_SECTION_TO_QUOTE:
-			if (state.currentQuote) {
-				return {
-					...state,
-					currentQuote: action.payload,
-				};
-			}
+			return {
+				...state,
+				currentQuote: action.payload,
+			};
 		case ADD_TEST_SECTION:
 			return {
 				...state,
