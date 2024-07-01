@@ -111,6 +111,7 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 			return {
 				...state,
 				currentQuote: action.payload,
+				addtestState: true,
 			};
 		case ADD_TEST_SECTION:
 			return {

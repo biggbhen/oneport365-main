@@ -140,7 +140,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 
 	return (
 		<div className='relative overflow-x-auto'>
-			<div className='w-full text-sm text-gray-500'>
+			<div className='w-full text-sm text-gray-500 min-w-[880px]  '>
 				<div className='grid grid-cols-7'>
 					{['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT'].map(
 						(day, index) => (
@@ -178,7 +178,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 									}, 0);
 									return (
 										<div
-											className={`px-6 py-4 min-h-[100px] group cursor-pointer whitespace-nowrap ${
+											className={`px-3 lg:px-6 py-4 min-h-[100px] group cursor-pointer whitespace-nowrap ${
 												day && 'hover:bg-[#1F2937]'
 											} ${day ? 'border' : ''}`}
 											key={dayIndex}
@@ -190,7 +190,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												}
 											}}>
 											<p
-												className={`mb-6 ${
+												className={`mb-6  ${
 													day.date && 'group-hover:text-white'
 												} ${
 													day?.date.format('DDMMYY').toUpperCase() ===
