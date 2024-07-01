@@ -16,15 +16,29 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { Button } from './ui/button';
+import { addSectionToQuote, addTestSection } from '@/lib/features/features';
+
 type Props = {};
 
-const GenerateQuote = (props: Props) => {
+const GenerateQuote = () => {
+	const { currentQuote, addtestState } = useAppSelector(
+		(state) => state.quotes
+	);
+	// console.log('Current quote in GenerateQuote:', currentQuote);
+
+	const dispatch = useAppDispatch();
 	const [sectionList, setSectionList] = useState<any>([
 		{
-			_id: '666e597045f4385cd91ea352',
 			section_name: '',
 			section_number: 0,
-			section_currency: 'NGN',
+			section_currency: {
+				currency: 'NGN',
+				exchange_rate: 100.45,
+				is_base_currency: true,
+				customer_currency: 'USD',
+			},
 			section_data: [],
 			editable: true,
 		},
@@ -70,14 +84,6 @@ const GenerateQuote = (props: Props) => {
 				sectionList.map((item: any) => {
 					const arr = { ...quoteInput, _id: item.section_data.length };
 					const newArr = [...item.section_data, arr];
-					console.log(
-						arr,
-						item,
-						'new arrsay',
-						newArr,
-						item.section_number,
-						idx
-					);
 					if (item.section_number === idx) {
 						return {
 							...item,
@@ -108,14 +114,22 @@ const GenerateQuote = (props: Props) => {
 				// _id: '666e597045f4385cd91ea352',
 				section_name: '',
 				section_number: sectionList.length,
-				section_currency: 'NGN',
+				section_currency: {
+					currency: 'NGN',
+					exchange_rate: 100.45,
+					is_base_currency: true,
+					customer_currency: 'USD',
+				},
 				section_data: [],
 				editable: true,
 			},
 		]);
 	};
 
-	// console.log(sectionList);
+	const handleCreate = () => {
+		dispatch(addSectionToQuote(sectionList));
+		// dispatch(addTestSection());
+	};
 
 	return (
 		<div className='max-w-[83rem] mx-auto py-10'>
@@ -365,7 +379,7 @@ const GenerateQuote = (props: Props) => {
 												</div>
 
 												{idx === sectionList.length - 1 && (
-													<div className='flex space-x-8'>
+													<div className='flex flex-col '>
 														<div className='mt-8 w-full'>
 															<button
 																className='text-[#00861E] font-normal text-sm bg-[#37B2481A] w-full p-4 flex gap-x-2 items-center justify-center'
@@ -373,6 +387,22 @@ const GenerateQuote = (props: Props) => {
 																<MdAddBox size={20} />
 																Add new Section
 															</button>
+														</div>
+														<div className='mt-8 w-full flex justify-between'>
+															<Button
+																variant='outline'
+																className='text-[red] font-normal text-sm border px-8'
+																onClick={() => window.history.back()}>
+																Cancel
+															</Button>
+															<Button
+																variant='outline'
+																color='green'
+																type='submit'
+																className='font-normal text-sm p-4 flex gap-x-2 items-center justify-center'
+																onClick={() => handleCreate()}>
+																Save quote
+															</Button>
 														</div>
 													</div>
 												)}

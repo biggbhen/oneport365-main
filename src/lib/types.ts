@@ -23,6 +23,6 @@ interface Section {
 interface Quote {
 	_id?: string;
 	quote_title: string;
-	quote_date: string;
+	quote_date: string | null;
 	sections?: Section[];
 }

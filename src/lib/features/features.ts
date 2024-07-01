@@ -3,6 +3,7 @@ interface QuotesState {
 	loading: boolean;
 	error: string | null;
 	currentQuote: Quote | null;
+	addtestState: boolean;
 }
 
 const initialState: QuotesState = {
@@ -10,6 +11,7 @@ const initialState: QuotesState = {
 	loading: false,
 	error: null,
 	currentQuote: null,
+	addtestState: false,
 };
 
 // actionTypes.ts
@@ -21,6 +23,7 @@ export const CREATE_QUOTE_SUCCESS = 'CREATE_QUOTE_SUCCESS';
 export const CREATE_QUOTE_FAILURE = 'CREATE_QUOTE_FAILURE';
 export const SET_INITIAL_QUOTE = 'SET_INITIAL_QUOTE';
 export const ADD_SECTION_TO_QUOTE = 'ADD_SECTION_TO_QUOTE';
+export const ADD_TEST_SECTION = 'ADD_TEST_SECTION';
 
 export const fetchQuotesRequested = (startDate: string, endDate: string) => ({
 	type: FETCH_QUOTES_REQUESTED,
@@ -57,6 +60,27 @@ export const addSectionToQuote = (section: Section) => ({
 	type: ADD_SECTION_TO_QUOTE,
 	payload: section,
 });
+export const addTestSection = () => ({
+	type: ADD_TEST_SECTION,
+});
+
+// set to localStorage
+export const saveQuoteToLocalStorage = (quote: {
+	quote_title: string;
+	quote_date: string | null;
+}) => {
+	if (typeof window !== 'undefined') {
+		localStorage.setItem('quote', JSON.stringify(quote));
+	}
+};
+
+const getQuoteFromLocalStorage = () => {
+	if (typeof window !== 'undefined') {
+		const quote = localStorage.getItem('quote');
+		return quote ? JSON.parse(quote) : null;
+	}
+	return null;
+};
 
 const quotesReducer = (state = initialState, action: any): QuotesState => {
 	switch (action.type) {
@@ -99,6 +123,11 @@ const quotesReducer = (state = initialState, action: any): QuotesState => {
 					},
 				};
 			}
+		case ADD_TEST_SECTION:
+			return {
+				...state,
+				addtestState: true,
+			};
 		default:
 			return state;
 	}

@@ -12,18 +12,24 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { setInitialQuote } from '@/lib/features/features';
+import {
+	saveQuoteToLocalStorage,
+	setInitialQuote,
+} from '@/lib/features/features';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { ReactNode } from 'react';
 import 'dayjs/locale/en';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
 
 interface ModalProps {
 	children: ReactNode;
+	day: dayjs.Dayjs | null;
 }
 
-const CreateDialog: React.FC<ModalProps> = ({ children }) => {
+// export default GenerateQuote;
+
+const CreateDialog: React.FC<ModalProps> = ({ children, day }) => {
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [title, setTitle] = React.useState('');
@@ -33,18 +39,19 @@ const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 	const { currentQuote } = useAppSelector((state) => state.quotes);
 
 	const handleSave = () => {
-		const newQuote = {
+		const newQuote: Quote = {
 			quote_title: title,
-			quote_date: currentDate.toISOString(),
+			quote_date: day ? day.toISOString() : null,
 			sections: [],
 		};
-		if (newQuote.quote_title !== '') router.push('/quote');
 		dispatch(setInitialQuote(newQuote));
+		if (newQuote.quote_title !== '') {
+			saveQuoteToLocalStorage(newQuote);
+			return router.push('/quote');
+		}
 	};
+	console.log(currentQuote);
 
-	if (typeof window === 'undefined') {
-		return null; // Return null or handle SSR case appropriately
-	}
 	return (
 		<div>
 			<Dialog open={open} onOpenChange={() => setOpen(!open)}>

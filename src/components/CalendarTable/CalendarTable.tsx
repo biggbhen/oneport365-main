@@ -25,6 +25,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	const [quotesByDay, setQuotesByDay] = useState<{ [key: string]: Quote[] }>(
 		{}
 	);
+	const [day, setDay] = useState<dayjs.Dayjs | null>(null);
 
 	const cancelRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -178,6 +179,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												if (day) {
 													handleOpen();
 													setDateQuoteList(dayQuotes);
+													setDay(day.date);
 												}
 											}}>
 											<p
@@ -244,7 +246,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 								) : (
 									<p className='text-center mb-4'>No quotes, add new quotes!</p>
 								)}
-								<CreateDialog>
+								<CreateDialog day={day}>
 									<FaPlus size={20} className='mr-2' />
 									Add new quote
 								</CreateDialog>

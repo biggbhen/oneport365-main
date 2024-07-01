@@ -1,11 +1,12 @@
 import GenerateQuote from '@/components/GenerateQuote';
 import React from 'react';
+import StoreProvider from '../StoreProvider';
 
 type Props = {};
 
 const Index = (props: Props) => {
 	return (
-		<div>
+		<StoreProvider>
 			<header className='min-h-4 shadow bg-[#FAFAFA] py-8 sticky z-20 top-0 left-0 w-full'>
 				<div className='flex items-center justify-between max-w-[83rem] mx-auto'>
 					<div className=''>
@@ -26,7 +27,7 @@ const Index = (props: Props) => {
 				</div>
 			</header>
 			<GenerateQuote />
-		</div>
+		</StoreProvider>
 	);
 };
 
