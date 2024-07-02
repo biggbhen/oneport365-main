@@ -1,3 +1,5 @@
+import { Quote, QuoteUpdate } from '../types';
+
 interface QuotesState {
 	quotes: any[];
 	loading: boolean;

@@ -8,6 +8,7 @@ import { FaPlus } from 'react-icons/fa6';
 import CreateDialog from '@/app/modals/CreateQuote';
 import QuoteDetailModal from '../quote-detail/detailModal';
 import { useAppSelector } from '@/lib/hooks';
+import { Quote } from '@/lib/types';
 
 type CalendarTableProps = {
 	daysArray: Array<{ date: dayjs.Dayjs | null; isPrevMonth: boolean }>;
@@ -74,7 +75,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 
 	const mapQuotesToDays = (quotes: Quote[]): { [key: string]: Quote[] } => {
 		const quotesByDay: any = {};
-		quotes.forEach((quote) => {
+		quotes.forEach((quote: any) => {
 			const date = new Date(quote.quote_date).toISOString().split('T')[0];
 			if (!quotesByDay[date]) {
 				quotesByDay[date] = [];
@@ -94,7 +95,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	// console.log(dateQuoteList);
 
 	const items = (dateQuoteList: Quote[]) => {
-		return dateQuoteList.slice(0, 5).map((quote, index) => (
+		return dateQuoteList.slice(0, 5).map((quote: Quote, index) => (
 			<div
 				key={index}
 				className='flex gap-x-2 hover:bg-[#D0F5FF] p-2 group cursor-pointer'
@@ -119,10 +120,16 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 								})}
 						</span>
 						<span className='text-[#D0F5FF] bg-[#374151]'>
-							{new Date(quote.quote_date).toLocaleTimeString([], {
-								hour: '2-digit',
-								minute: '2-digit',
-							})}
+							{quote.quote_date
+								? new Date(
+										typeof quote.quote_date === 'string'
+											? quote.quote_date
+											: quote.quote_date.toISOString()
+								  ).toLocaleTimeString([], {
+										hour: '2-digit',
+										minute: '2-digit',
+								  })
+								: ''}
 						</span>
 					</p>
 					<p className='text-[#3B82F6] text-xs'>{quote.quote_title}</p>

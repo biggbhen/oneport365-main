@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { Button } from './ui/button';
 import { addSectionToQuote, addTestSection } from '@/lib/features/features';
 import { useLocalStorage } from '@/lib/features/actions';
+import { SectionData } from '@/lib/types';
 
 type Props = {};
 

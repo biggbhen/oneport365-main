@@ -1,4 +1,6 @@
-interface SectionData {
+import dayjs from 'dayjs';
+
+export interface SectionData {
 	basis: string;
 	unit_of_measurement: string;
 	unit: number;
@@ -20,10 +22,10 @@ interface Section {
 	section_data: SectionData[];
 }
 
-interface Quote {
+export interface Quote {
 	_id?: string;
 	quote_title: string;
-	quote_date: string | null;
+	quote_date: string | dayjs.Dayjs | null;
 	sections?: Section[];
 }
 
@@ -35,7 +37,7 @@ interface SectionUpdate {
 	editable: boolean;
 }
 
-interface QuoteUpdate {
+export interface QuoteUpdate {
 	quote_title: string;
 	quote_date: string;
 	sections: SectionUpdate[];

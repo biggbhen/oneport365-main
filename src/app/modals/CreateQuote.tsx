@@ -21,6 +21,7 @@ import React, { ReactNode } from 'react';
 import 'dayjs/locale/en';
 import dayjs from 'dayjs';
 import { useRouter, redirect } from 'next/navigation';
+import { Quote } from '@/lib/types';
 
 interface ModalProps {
 	children: ReactNode;
@@ -41,12 +42,17 @@ const CreateDialog: React.FC<ModalProps> = ({ children, day }) => {
 	const handleSave = () => {
 		const newQuote: Quote = {
 			quote_title: title,
-			quote_date: day ? day.toISOString() : null,
+			quote_date: day,
 			sections: [],
 		};
 		dispatch(setInitialQuote(newQuote));
+
 		if (newQuote.quote_title !== '') {
-			saveQuoteToLocalStorage(newQuote);
+			const quoteToSave = {
+				...newQuote,
+				quote_date: newQuote.quote_date ? newQuote.quote_date.toString() : null,
+			};
+			saveQuoteToLocalStorage(quoteToSave);
 			return router.push('/quote');
 		}
 	};
