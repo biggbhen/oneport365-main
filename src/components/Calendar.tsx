@@ -1,16 +1,19 @@
 'use client';
-import React, { useState } from 'react';
+import React, { use, useCallback, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
 import { FaAngleRight } from 'react-icons/fa6';
 import { FaAngleLeft } from 'react-icons/fa6';
 import CalendarTable from './CalendarTable/CalendarTable';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { fetchQuotesRequested } from '@/lib/features/features';
 
 type CalendarProps = {};
 
 const Calendar: React.FC<CalendarProps> = () => {
+	const dispatch = useAppDispatch();
+	const { quotes } = useAppSelector((state) => state.quotes);
 	const [currentDate, setCurrentDate] = useState(dayjs());
-
 	const startOfMonth = currentDate.startOf('month');
 	const endOfMonth = currentDate.endOf('month');
 	const daysInMonth = endOfMonth.date();
@@ -42,18 +45,27 @@ const Calendar: React.FC<CalendarProps> = () => {
 		daysArray.push({ date: null, isPrevMonth: false });
 	}
 
-	const handleNextMonth = () => {
+	const handleNextMonth = useCallback(() => {
 		setCurrentDate(currentDate.add(1, 'month'));
-	};
+	}, [currentDate]);
 
-	const handlePreviousMonth = () => {
+	const handlePreviousMonth = useCallback(() => {
 		setCurrentDate(currentDate.subtract(1, 'month'));
-	};
+	}, [currentDate]);
 
 	const currentMonth = currentDate.format('MMMM').toUpperCase();
 	const currentYear = currentDate.format('YYYY');
 
-	// console.log(currentDate);
+	React.useEffect(() => {
+		// Get the first day of the current month in ISO string format
+		const startDate = currentDate.startOf('month').toISOString();
+
+		// Get today's date in ISO string format
+		const endDate = dayjs().toISOString();
+
+		dispatch(fetchQuotesRequested(startDate, endDate));
+	}, [dispatch, currentDate]);
+
 	return (
 		<div className='px-8 mb-8'>
 			<div className='flex justify-between p-4 mb-6'>

@@ -1,5 +1,6 @@
 import Calendar from '@/components/Calendar';
 import Image from 'next/image';
+import StoreProvider from './StoreProvider';
 
 // Display days of the week as headers.
 // Display dates in a grid format.
@@ -7,8 +8,10 @@ import Image from 'next/image';
 
 export default function Home() {
 	return (
-		<main className=''>
-			<Calendar />
+		<main>
+			<StoreProvider>
+				<Calendar />
+			</StoreProvider>
 		</main>
 	);
 }
