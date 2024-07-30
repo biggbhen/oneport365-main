@@ -13,10 +13,13 @@ import {
 export function SelectInput() {
 	return (
 		<Select>
-			<SelectTrigger className='w-[180px] border-0'>
-				<SelectValue placeholder='Select a unit' />
+			<SelectTrigger>
+				<SelectValue
+					placeholder='Select a unit'
+					className='w-max border: 0px;'
+				/>
 			</SelectTrigger>
-			<SelectContent>
+			<SelectContent className='w-max border-0'>
 				<SelectGroup>
 					<SelectItem value='kg'>per kilogram</SelectItem>
 					<SelectItem value='g'>per gram</SelectItem>
