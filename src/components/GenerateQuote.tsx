@@ -125,86 +125,153 @@ const GenerateQuote = (props: Props) => {
 						<div className='relative overflow-x-auto w-full h-fit'>
 							{sectionList.length > 0 &&
 								sectionList.map((item: any, idx: number) => (
-									<>
-										<div className='flex space-x-8 items-center border border-[red]'>
-											<div className='bg-[#F9FAFB] border border-[#F9FAFB] py-2 pl-4 flex items-center space-x-4 w-full'>
-												<p className='text-[#374151] text-sm'>
-													Change Quote Time
-												</p>
-												<div className='flex items-center space-x-2 text-xs w-fit'>
-													<DatePickerWithRange />
-												</div>
-											</div>
-											<div className='w-[21rem] p-5'></div>
-										</div>
-										<div className='flex space-x-8' key={item._id}>
-											<div className='grow border border-[#F3F4F6] shadow-sm h-fit'>
-												<div className='min-h-10 w-full'>
-													<input
-														type='text'
-														placeholder='Edit Section Label'
-														onChange={(e) => handleSectionLabel(e, idx)}
-														value={item.section_name}
-														className='px-4 outline-none placeholder:text-xs my-1'
-													/>
-												</div>
+									<div key={idx}>
+										<div className='flex space-x-8 mb-8' key={item._id}>
+											<div className='grow'>
+												<div className='border border-[#F3F4F6] shadow-sm h-fit'>
+													{idx === 0 && (
+														<div className='flex items-center'>
+															<div className='bg-[#F9FAFB] border border-[#F9FAFB] py-2 pl-4 flex items-center space-x-4 w-full'>
+																<p className='text-[#374151] text-sm'>
+																	Change Quote Time
+																</p>
+																<div className='flex items-center space-x-2 text-xs w-fit'>
+																	<DatePickerWithRange />
+																</div>
+															</div>
+														</div>
+													)}
+													<div className='min-h-10 w-full'>
+														<input
+															type='text'
+															placeholder='Edit Section Label'
+															onChange={(e) => handleSectionLabel(e, idx)}
+															value={item.section_name}
+															className='px-4 outline-none placeholder:text-xs my-1'
+														/>
+													</div>
 
-												<table className='w-full text-sm text-left rtl:text-right text-[#6B7280]'>
-													<thead className='text-xs bg-[#F9FAFB]'>
-														<tr>
-															<th
-																scope='col'
-																className='px-4 py-4 font-normal text-[#6B7280]'>
-																Basis
-															</th>
-															<th
-																scope='col'
-																className='font-normal text-[#6B7280]'>
-																<p className='px-6 border-l border-[#E6E7ECB2]'>
-																	Unit of measure
-																</p>
-															</th>
-															<th
-																scope='col'
-																className='font-normal text-[#6B7280]'>
-																<p className='px-6 border-l border-[#E6E7ECB2]'>
-																	Unit
-																</p>
-															</th>
-															<th
-																scope='col'
-																className='font-normal text-[#6B7280]'>
-																<p className='px-6 border-l border-[#E6E7ECB2] flex items-center justify-between space-x-4'>
-																	Rate
-																	<span className='text-[#374151] text-[10px] py-1 px-2 bg-[#E5E7EB] rounded'>
-																		USD
-																	</span>
-																</p>
-															</th>
-															<th
-																scope='col'
-																className='font-normal text-[#6B7280]'>
-																<p className='px-6 border-l border-[#E6E7ECB2] flex items-center justify-between space-x-4'>
-																	Amount
-																	<span className='text-[#374151] text-[10px] py-1 px-2 bg-[#E5E7EB] rounded'>
-																		USD
-																	</span>
-																</p>
-															</th>
-															<th
-																scope='col'
-																className='px-4 py-4 font-normal text-[#6B7280]'>
-																<span className='sr-only'>Edit</span>
-															</th>
-														</tr>
-													</thead>
+													<table className='w-full text-sm text-left rtl:text-right text-[#6B7280]'>
+														<thead className='text-xs bg-[#F9FAFB]'>
+															<tr>
+																<th
+																	scope='col'
+																	className='px-4 py-4 font-normal text-[#6B7280]'>
+																	Basis
+																</th>
+																<th
+																	scope='col'
+																	className='font-normal text-[#6B7280]'>
+																	<p className='px-6 border-l border-[#E6E7ECB2]'>
+																		Unit of measure
+																	</p>
+																</th>
+																<th
+																	scope='col'
+																	className='font-normal text-[#6B7280]'>
+																	<p className='px-6 border-l border-[#E6E7ECB2]'>
+																		Unit
+																	</p>
+																</th>
+																<th
+																	scope='col'
+																	className='font-normal text-[#6B7280]'>
+																	<p className='px-6 border-l border-[#E6E7ECB2] flex items-center justify-between space-x-4'>
+																		Rate
+																		<span className='text-[#374151] text-[10px] py-1 px-2 bg-[#E5E7EB] rounded'>
+																			USD
+																		</span>
+																	</p>
+																</th>
+																<th
+																	scope='col'
+																	className='font-normal text-[#6B7280]'>
+																	<p className='px-6 border-l border-[#E6E7ECB2] flex items-center justify-between space-x-4'>
+																		Amount
+																		<span className='text-[#374151] text-[10px] py-1 px-2 bg-[#E5E7EB] rounded'>
+																			USD
+																		</span>
+																	</p>
+																</th>
+																<th
+																	scope='col'
+																	className='px-4 py-4 font-normal text-[#6B7280]'>
+																	<span className='sr-only'>Actions</span>
+																</th>
+															</tr>
+														</thead>
 
-													<tbody className=''>
-														{item.section_data.length > 0 &&
-															item.section_data.map((item: any) => (
-																<tr
-																	className='bg-white border-b border-[#E6E7ECB2] text-xs'
-																	key={item.id}>
+														<tbody className=''>
+															{item.section_data.length > 0 &&
+																item.section_data.map((item: any) => (
+																	<tr
+																		className='bg-white border-b border-[#E6E7ECB2] text-xs'
+																		key={item.id}>
+																		<th
+																			scope='row'
+																			className='font-normal text-[#6B7280] whitespace-nowrap dark:text-white'>
+																			<input
+																				type='text'
+																				name='basis'
+																				onChange={handleQuoteInput}
+																				value={item.basis}
+																				disabled
+																				placeholder='Enter Basis'
+																				className='px-4 py-4 border-none outline-none'
+																			/>
+																		</th>
+
+																		<td className=''>
+																			<SelectInput />
+																		</td>
+
+																		<td className=''>
+																			<input
+																				type='number'
+																				name='unit'
+																				onChange={handleQuoteInput}
+																				value={item.unit}
+																				disabled
+																				placeholder='Enter Unit'
+																				className='px-4 outline-none border-l border-[#E6E7ECB2]'
+																			/>
+																		</td>
+
+																		<td className=''>
+																			<input
+																				type='number'
+																				name='rate'
+																				onChange={handleQuoteInput}
+																				value={item.rate}
+																				disabled
+																				placeholder='Enter rate'
+																				className='px-4 outline-none border-l border-[#E6E7ECB2]'
+																			/>
+																		</td>
+
+																		<td className=''>
+																			<input
+																				type='text'
+																				name='amount'
+																				onChange={handleQuoteInput}
+																				value={item.amount}
+																				disabled
+																				placeholder='Amount'
+																				className='px-4 outline-none border-l border-[#E6E7ECB2]'
+																			/>
+																		</td>
+
+																		<td className='px-4 py-4 text-right'>
+																			<FiTrash
+																				size={15}
+																				className='text-[red]'
+																			/>
+																		</td>
+																	</tr>
+																))}
+
+															{item.editable && (
+																<tr className='bg-white border-b border-[#E6E7ECB2] text-xs'>
 																	<th
 																		scope='row'
 																		className='font-normal text-[#6B7280] whitespace-nowrap dark:text-white'>
@@ -212,8 +279,7 @@ const GenerateQuote = (props: Props) => {
 																			type='text'
 																			name='basis'
 																			onChange={handleQuoteInput}
-																			value={item.basis}
-																			disabled
+																			value={quoteInput.basis}
 																			placeholder='Enter Basis'
 																			className='px-4 py-4 border-none outline-none'
 																		/>
@@ -228,8 +294,7 @@ const GenerateQuote = (props: Props) => {
 																			type='number'
 																			name='unit'
 																			onChange={handleQuoteInput}
-																			value={item.unit}
-																			disabled
+																			value={quoteInput.unit}
 																			placeholder='Enter Unit'
 																			className='px-4 outline-none border-l border-[#E6E7ECB2]'
 																		/>
@@ -240,8 +305,7 @@ const GenerateQuote = (props: Props) => {
 																			type='number'
 																			name='rate'
 																			onChange={handleQuoteInput}
-																			value={item.rate}
-																			disabled
+																			value={quoteInput.rate}
 																			placeholder='Enter rate'
 																			className='px-4 outline-none border-l border-[#E6E7ECB2]'
 																		/>
@@ -252,8 +316,7 @@ const GenerateQuote = (props: Props) => {
 																			type='text'
 																			name='amount'
 																			onChange={handleQuoteInput}
-																			value={item.amount}
-																			disabled
+																			value={quoteInput.amount}
 																			placeholder='Amount'
 																			className='px-4 outline-none border-l border-[#E6E7ECB2]'
 																		/>
@@ -263,76 +326,32 @@ const GenerateQuote = (props: Props) => {
 																		<FiTrash size={15} className='text-[red]' />
 																	</td>
 																</tr>
-															))}
+															)}
+														</tbody>
+													</table>
 
-														{item.editable && (
-															<tr className='bg-white border-b border-[#E6E7ECB2] text-xs'>
-																<th
-																	scope='row'
-																	className='font-normal text-[#6B7280] whitespace-nowrap dark:text-white'>
-																	<input
-																		type='text'
-																		name='basis'
-																		onChange={handleQuoteInput}
-																		value={quoteInput.basis}
-																		placeholder='Enter Basis'
-																		className='px-4 py-4 border-none outline-none'
-																	/>
-																</th>
-
-																<td className=''>
-																	<SelectInput />
-																</td>
-
-																<td className=''>
-																	<input
-																		type='number'
-																		name='unit'
-																		onChange={handleQuoteInput}
-																		value={quoteInput.unit}
-																		placeholder='Enter Unit'
-																		className='px-4 outline-none border-l border-[#E6E7ECB2]'
-																	/>
-																</td>
-
-																<td className=''>
-																	<input
-																		type='number'
-																		name='rate'
-																		onChange={handleQuoteInput}
-																		value={quoteInput.rate}
-																		placeholder='Enter rate'
-																		className='px-4 outline-none border-l border-[#E6E7ECB2]'
-																	/>
-																</td>
-
-																<td className=''>
-																	<input
-																		type='text'
-																		name='amount'
-																		onChange={handleQuoteInput}
-																		value={quoteInput.amount}
-																		placeholder='Amount'
-																		className='px-4 outline-none border-l border-[#E6E7ECB2]'
-																	/>
-																</td>
-
-																<td className='px-4 py-4 text-right'>
-																	<FiTrash size={15} className='text-[red]' />
-																</td>
-															</tr>
-														)}
-													</tbody>
-												</table>
-
-												<div className=''>
-													<button
-														className='text-[#00861E] px-4 py-4 text-sm flex items-center gap-2'
-														onClick={() => handleAddQuote(idx)}>
-														<MdAddBox />
-														Add new basis
-													</button>
+													<div className=''>
+														<button
+															className='text-[#00861E] px-4 py-4 text-sm flex items-center gap-2'
+															onClick={() => handleAddQuote(idx)}>
+															<MdAddBox />
+															Add new basis
+														</button>
+													</div>
 												</div>
+
+												{idx === sectionList.length - 1 && (
+													<div className='flex space-x-8'>
+														<div className='mt-8 w-full'>
+															<button
+																className='text-[#00861E] font-normal text-sm bg-[#37B2481A] w-full p-4 flex gap-x-2 items-center justify-center'
+																onClick={handleAddSection}>
+																<MdAddBox size={20} />
+																Add new Section
+															</button>
+														</div>
+													</div>
+												)}
 											</div>
 
 											<div className='w-[21rem] h-fit border rounded-xl border-[#E5E7EB] p-5'>
@@ -349,7 +368,12 @@ const GenerateQuote = (props: Props) => {
 													</p>
 													<div className='flex items-center space-x-3 text-sm text-[#34373F] mt-2'>
 														<div className='p-2 px-3 border'>
-															<Image src={''} alt='icon' />
+															<Image
+																src={usFlag}
+																alt=''
+																width={20}
+																height={20}
+															/>
 														</div>
 														<div className=''>
 															<CgArrowsExchange size={20} />
@@ -365,22 +389,9 @@ const GenerateQuote = (props: Props) => {
 												</button>
 											</div>
 										</div>
-									</>
+									</div>
 								))}
 						</div>
-					</div>
-
-					<div className='flex space-x-8'>
-						<div className='mt-8 w-full'>
-							<button
-								className='text-[#00861E] font-normal text-sm bg-[#37B2481A] w-full p-4 flex gap-x-2 items-center justify-center'
-								onClick={handleAddSection}>
-								<MdAddBox size={20} />
-								Add new Section
-							</button>
-						</div>
-
-						<div className='w-[21rem] p-5'></div>
 					</div>
 				</div>
 			</div>

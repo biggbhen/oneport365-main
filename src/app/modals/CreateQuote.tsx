@@ -11,18 +11,22 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ReactNode, useEffect, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 
 interface ModalProps {
 	children: ReactNode;
 }
 
 const CreateDialog: React.FC<ModalProps> = ({ children }) => {
+	const [open, setOpen] = React.useState(false);
 	return (
 		<div>
-			<Dialog>
+			<Dialog open={open} onOpenChange={() => setOpen(!open)}>
 				<DialogTrigger asChild>
-					<Button variant='outline' className='flex items-center w-full'>
+					<Button
+						variant='outline'
+						className='flex items-center w-full'
+						onClick={() => setOpen(true)}>
 						{children}
 					</Button>
 				</DialogTrigger>
@@ -63,7 +67,10 @@ const CreateDialog: React.FC<ModalProps> = ({ children }) => {
 						</div>
 						<div>
 							{' '}
-							<Button type='submit' className='w-full bg-white text-[red]'>
+							<Button
+								type='submit'
+								onClick={() => setOpen(false)}
+								className='w-full bg-transparent hover:bg-transparent text-[red] mt-3 hover:shadow-md'>
 								Cancel
 							</Button>
 						</div>
