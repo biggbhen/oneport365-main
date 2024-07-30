@@ -1,18 +1,17 @@
 'use client';
-import React, { use, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
 import { FaAngleRight } from 'react-icons/fa6';
 import { FaAngleLeft } from 'react-icons/fa6';
 import CalendarTable from './CalendarTable/CalendarTable';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppDispatch } from '@/lib/hooks';
 import { fetchQuotesRequested } from '@/lib/features/features';
 
 type CalendarProps = {};
 
 const Calendar: React.FC<CalendarProps> = () => {
 	const dispatch = useAppDispatch();
-	const { quotes } = useAppSelector((state) => state.quotes);
 	const [currentDate, setCurrentDate] = useState(dayjs());
 	const startOfMonth = currentDate.startOf('month');
 	const endOfMonth = currentDate.endOf('month');

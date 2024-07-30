@@ -1,5 +1,4 @@
 import Calendar from '@/components/Calendar';
-import Image from 'next/image';
 import StoreProvider from './StoreProvider';
 
 // Display days of the week as headers.

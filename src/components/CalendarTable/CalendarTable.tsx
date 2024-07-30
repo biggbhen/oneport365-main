@@ -7,6 +7,7 @@ import { ImCancelCircle } from 'react-icons/im';
 import { FaPlus } from 'react-icons/fa6';
 import CreateDialog from '@/app/modals/CreateQuote';
 import QuoteDetailModal from '../quote-detail/detailModal';
+import { useAppSelector } from '@/lib/hooks';
 
 type CalendarTableProps = {
 	daysArray: Array<{ date: dayjs.Dayjs | null; isPrevMonth: boolean }>;
@@ -17,6 +18,12 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const [openDetailModal, setOpenDetailModal] = useState(false);
+
+	const { quotes } = useAppSelector((state) => state.quotes);
+	const [filteredQuotes, setFilteredQuotes] = useState(quotes);
+	const [quotesByDay, setQuotesByDay] = useState<{ [key: string]: Quote[] }>(
+		{}
+	);
 
 	const cancelRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
@@ -54,7 +61,35 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 
 	const handleOpen = () => setIsOpen(true);
 
-	// console.log(weeks);
+	const filterQuotesByMonth = () => {
+		const currentDate = new Date();
+		const currentYear = currentDate.getFullYear();
+		return quotes.filter((quote) => {
+			const quoteDate = new Date(quote.quote_date);
+			return quoteDate.getFullYear() === currentYear && quoteDate.getMonth();
+		});
+	};
+
+	const mapQuotesToDays = (quotes: Quote[]): { [key: string]: Quote[] } => {
+		const quotesByDay: any = {};
+		quotes.forEach((quote) => {
+			const date = new Date(quote.quote_date).toISOString().split('T')[0];
+			if (!quotesByDay[date]) {
+				quotesByDay[date] = [];
+			}
+			quotesByDay[date].push(quote);
+		});
+		return quotesByDay;
+	};
+
+	React.useEffect(() => {
+		const filtered = filterQuotesByMonth();
+		setFilteredQuotes(filtered);
+		setQuotesByDay(mapQuotesToDays(filtered));
+		// eslint-disable-next-line
+	}, [quotes]);
+
+	console.log(quotesByDay);
 
 	const items = new Array(5).fill(null).map((_, index) => (
 		<div
@@ -97,8 +132,24 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 								(
 									day: { date: dayjs.Dayjs | null; isPrevMonth: boolean },
 									dayIndex
-								) =>
-									day.date && (
+								) => {
+									if (!day.date) return null;
+									const dayString = day.date.toISOString().split('T')[0];
+									const dayQuotes = quotesByDay[dayString] || [];
+									const totalAmount = dayQuotes.reduce((sum, quote) => {
+										return (
+											sum +
+											quote.sections.reduce((sectionSum, section) => {
+												return (
+													sectionSum +
+													section.section_data.reduce((dataSum, data) => {
+														return dataSum + data.amount;
+													}, 0)
+												);
+											}, 0)
+										);
+									}, 0);
+									return (
 										<div
 											className={`px-6 py-4 min-h-[100px] group cursor-pointer whitespace-nowrap ${
 												day && 'hover:bg-[#1F2937]'
@@ -130,7 +181,8 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												{day.date ? 'Total: $23,045.00' : ''}
 											</p>
 										</div>
-									)
+									);
+								}
 							)}
 						</div>
 					))}
