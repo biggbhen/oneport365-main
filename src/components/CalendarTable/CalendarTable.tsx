@@ -21,6 +21,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 
 	const { quotes } = useAppSelector((state) => state.quotes);
 	const [filteredQuotes, setFilteredQuotes] = useState(quotes);
+	const [dateQuoteList, setDateQuoteList] = useState<any[]>([]);
 	const [quotesByDay, setQuotesByDay] = useState<{ [key: string]: Quote[] }>(
 		{}
 	);
@@ -89,27 +90,45 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 		// eslint-disable-next-line
 	}, [quotes]);
 
-	console.log(quotesByDay);
+	console.log(dateQuoteList);
 
-	const items = new Array(5).fill(null).map((_, index) => (
-		<div
-			key={index}
-			className='flex gap-x-2 hover:bg-[#D0F5FF] p-2 group cursor-pointer'
-			onClick={() => setOpenDetailModal(!openDetailModal)}>
-			<div className='border-[3px] border-[#374151] rounded-t-[25px] rounded-b-[25px]'></div>
-			<div className='p-2 flex-grow'>
-				<p className='flex gap-x-2 justify-between mb-2 text-xs'>
-					<span className='text-[#D0F5FF] group-hover:text-[#005BC2]'>
-						$2,450.00
-					</span>
-					<span className='text-[#D0F5FF] bg-[#374151]'>4:00PM</span>
-				</p>
-				<p className='text-[#3B82F6] text-xs'>
-					Air Freight/ Ocean Freight/ CBT/ Haulage
-				</p>
+	const items = (dateQuoteList: Quote[]) => {
+		return dateQuoteList.slice(0, 5).map((quote, index) => (
+			<div
+				key={index}
+				className='flex gap-x-2 hover:bg-[#D0F5FF] p-2 group cursor-pointer'
+				onClick={() => setOpenDetailModal(!openDetailModal)}>
+				<div className='border-[3px] border-[#374151] rounded-t-[25px] rounded-b-[25px]'></div>
+				<div className='p-2 flex-grow'>
+					<p className='flex gap-x-2 justify-between mb-2 text-xs'>
+						<span className='text-[#D0F5FF] group-hover:text-[#005BC2]'>
+							{quote.sections
+								.reduce(
+									(sum, section) =>
+										sum +
+										section.section_data.reduce(
+											(dataSum, data) => dataSum + data.amount,
+											0
+										),
+									0
+								)
+								.toLocaleString('en-US', {
+									style: 'currency',
+									currency: 'USD',
+								})}
+						</span>
+						<span className='text-[#D0F5FF] bg-[#374151]'>
+							{new Date(quote.quote_date).toLocaleTimeString([], {
+								hour: '2-digit',
+								minute: '2-digit',
+							})}
+						</span>
+					</p>
+					<p className='text-[#3B82F6] text-xs'>{quote.quote_title}</p>
+				</div>
 			</div>
-		</div>
-	));
+		));
+	};
 
 	return (
 		<div className='relative overflow-x-auto'>
@@ -155,7 +174,12 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												day && 'hover:bg-[#1F2937]'
 											} ${day ? 'border' : ''}`}
 											key={dayIndex}
-											onClick={() => day && handleOpen()}>
+											onClick={() => {
+												if (day) {
+													handleOpen();
+													setDateQuoteList(dayQuotes);
+												}
+											}}>
 											<p
 												className={`mb-6 ${
 													day.date && 'group-hover:text-white'
@@ -170,7 +194,7 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 												className={`text-xs mb-1 ${
 													day && 'group-hover:text-white'
 												}`}>
-												{day ? '5 Quotes' : ''}
+												{`${dayQuotes.length | 0} Quotes`}
 											</p>
 											<p
 												className={`text-xs w-max px-1 rounded-[25px] ${
@@ -209,7 +233,11 @@ const CalendarTable: React.FC<CalendarTableProps> = ({ daysArray }) => {
 								</p>
 							</div>
 							<div className='flex flex-col gap-y-2'>
-								{items}
+								{dateQuoteList.length > 0 ? (
+									items(dateQuoteList)
+								) : (
+									<p className='text-center mb-4'>No quotes, add new quotes!</p>
+								)}
 								<CreateDialog>
 									<FaPlus size={20} className='mr-2' />
 									Add new quote

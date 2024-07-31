@@ -1,7 +1,7 @@
 import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
 import quotesReducer from './features/features';
 import createSagaMiddleware from 'redux-saga';
-import { watchFetchQuotes } from './saga';
+import rootSaga from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -13,7 +13,7 @@ export const makeStore = () => {
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware().concat(sagaMiddleware),
 	});
-	sagaMiddleware.run(watchFetchQuotes);
+	sagaMiddleware.run(rootSaga);
 	return store;
 };
 
